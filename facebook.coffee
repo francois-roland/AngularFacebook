@@ -112,7 +112,7 @@
               promise.promise.then null, null, (notification) ->
                 if notification == 'sdk loaded'
                   FB.event.subscribe domain+'.'+_event, (response) ->
-                    _rs.$broadcast 'fb.'+domain+'.'+_event, response
+                    _rootScope.$broadcast 'fb.'+domain+'.'+_event, response
                     return
                   return
                 return
