@@ -1,4 +1,4 @@
-AngularFacebook - with coffee in it
+AngularFacebook - with coffee inside !
 ===============
 
 This is a coffee script translation of boynux's AngularFacebook module
