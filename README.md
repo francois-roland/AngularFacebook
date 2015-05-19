@@ -1,7 +1,8 @@
-AngularFacebook
+AngularFacebook - with coffee in it
 ===============
 
-AngularJs module for Facebook API.
+This is a coffee script translation of boynux's AngularFacebook module
+
 
 More info at: http://www.boynux.com/angularjs-facebook-integration/
 
