@@ -44,6 +44,10 @@
       ]
     Q = []
 
+    # I've left these queue & process functions, for those who wish to queue more jobs to be ran
+    # when facebook is finished loading, but with the promise mechanic below,
+    # you can directly add calls to anything you want in $get.waitForNotification
+
     processPostInitializeQ = () ->
       # console.log 'processing Q'
       while item = Q.shift()
@@ -101,7 +105,8 @@
 
           return def.promise
 
-        waitForNotification = (message, func) ->
+        waitForNotification = (message, f) ->
+          # the f argument is an object like this : f = {func: "functionName", self: "context", args: "arguments (array)"}
           promise.promise.then null, null, (notification) ->
             if notification == message
               f.func.apply f.self, f.args
@@ -109,21 +114,30 @@
         registerEventHandlers = () ->
           angular.forEach facebookEvents, (events, domain) ->
             angular.forEach events, (_event) ->
-              promise.promise.then null, null, (notification) ->
-                if notification == 'sdk loaded'
+              waitForNotification 'sdk loaded', {
+                func: () ->
                   FB.event.subscribe domain+'.'+_event, (response) ->
                     _rootScope.$broadcast 'fb.'+domain+'.'+_event, response
                     return
                   return
-                return
-              return
+                self: this
+                args: []
+              }
 
         waitForNotification 'sdk loaded', {
           func: () ->
+
+            # Here, we are sure that the sdk is loaded.
+            # you can either queue jobs everywhere else in executeWhenInitialized
+            #(but they might be queued after this is ran)
+            # or link other function calls below, or even declare more
+            # waitForNotification blocks with dedicated promise.notify messages
+
             initialized = true
             processPostInitializeQ()
             registerEventHandlers()
             console.log 'Sdk loaded', initialized
+            
           self: this
           args: []
         }
